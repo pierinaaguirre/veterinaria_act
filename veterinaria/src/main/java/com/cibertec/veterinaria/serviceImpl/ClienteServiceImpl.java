@@ -21,13 +21,35 @@ public class ClienteServiceImpl implements ClienteService{
 	}
 
 	@Override
-	public Cliente insertaActualiza(Cliente obj) {
+	public Cliente insertaCliente(Cliente obj) {
 		return cRep.save(obj);
 	}
 
 	@Override
-	public void eliminaCliente(int cod_cli) {
-		cRep.deleteById(cod_cli);
+	public String eliminaCliente(int cod_cli) {
+		if(cRep.findById(cod_cli).isPresent()) {
+			cRep.deleteById(cod_cli);
+			return "Cliente eliminado satisfactoriamente.";
+		}
+		return "¡Error! No existe este cliente.";
+	}
+
+	@Override
+	public String actualizaCliente(Cliente clienteNew) {
+		int num= clienteNew.getCod_cli();
+		if(cRep.findById(num).isPresent()) {
+			Cliente cl= new Cliente();
+			cl.setCod_cli(clienteNew.getCod_cli());
+			cl.setNom_cli(clienteNew.getNom_cli());
+			cl.setApe_cli(clienteNew.getApe_cli());
+			cl.setDni_cli(clienteNew.getDni_cli());
+			cl.setSexo_cli(clienteNew.getSexo_cli());
+			cl.setCod_dis(clienteNew.getCod_dis());
+			
+			cRep.save(cl);
+			return "Cliente modificado.";
+		}
+		return "Ocurrió un error al modificar el cliente.";
 	}
 	
 
